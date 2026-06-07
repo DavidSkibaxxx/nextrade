@@ -8,7 +8,7 @@ const WALLETS = [
   {
     coin: 'ETH',
     name: 'Ethereum (ETH/USDT ERC-20)',
-    address: '0xYOUR_ETH_ADDRESS_HERE',
+    address: '0x88611247DFfA549B3200924a0C8e906c9a73eFe2',
     note: 'Send ETH or USDT (ERC-20) only. EVM-compatible.',
     color: '#627EEA',
     minDeposit: 0.01,
@@ -17,7 +17,7 @@ const WALLETS = [
   {
     coin: 'BTC',
     name: 'Bitcoin (BTC)',
-    address: 'YOUR_BTC_ADDRESS_HERE',
+    address: 'bc1qf9am47ayvx38x3af94z6dlvyl9gvncdn46gjnz',
     note: 'Send BTC only. Minimum 0.0001 BTC.',
     color: '#F7931A',
     minDeposit: 0.0001,
@@ -26,7 +26,7 @@ const WALLETS = [
   {
     coin: 'USDT',
     name: 'Tether (USDT TRC-20)',
-    address: 'YOUR_TRC20_ADDRESS_HERE',
+    address: '0x88611247DFfA549B3200924a0C8e906c9a73eFe2',
     note: 'Send USDT on Tron network (TRC-20) only.',
     color: '#26A17B',
     minDeposit: 10,
