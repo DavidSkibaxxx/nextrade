@@ -92,7 +92,7 @@ export default function Admin() {
     if (error) {
       setAdjustMsg(m => ({ ...m, [userId]: { type: 'error', text: error.message } }))
     } else {
-      setAdjustMsg(m => ({ ...m, [userId]: { type: 'success', text: `Balance updated to $${fmt(newBalance)}` } }))
+      setAdjustMsg(m => ({ ...m, [userId]: { type: 'success', text: 'Balance updated to $' + fmt(newBalance) } }))
       setAdjustments(a => ({ ...a, [userId]: '' }))
       await fetchUsers()
     }
@@ -125,7 +125,7 @@ export default function Admin() {
           { label: 'Pending deposits', value: pending.length, color: '#ffaa00' },
           { label: 'Confirmed', value: deposits.filter(d => d.status === 'confirmed').length, color: 'var(--up)' },
           { label: 'Total users', value: users.length, color: 'var(--accent)' },
-          { label: 'Total deposited', value: `$${fmt(deposits.filter(d => d.status === 'confirmed').reduce((s, d) => s + Number(d.amount), 0))}`, color: 'var(--text)' },
+          { label: 'Total deposited', value: '$' + fmt(deposits.filter(d => d.status === 'confirmed').reduce((s, d) => s + Number(d.amount), 0)), color: 'var(--text)' },
         ].map((s, i) => (
           <div key={i} className="card" style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{s.label}</div>
@@ -152,10 +152,14 @@ export default function Admin() {
 
       {tab === 'deposits' && (
         <div>
+          {pending.length === 0 && (
+            <div className="card" style={{ textAlign: 'center', padding: '40px', marginBottom: 24 }}>
+              <div style={{ color: 'var(--muted)', fontSize: 13 }}>No pending deposits</div>
+            </div>
+          )}
           {pending.length > 0 && (
             <div style={{ marginBottom: 28 }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ffaa00', display: 'inline-block' }} className="pulse" />
+              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, marginBottom: 14 }}>
                 Pending review ({pending.length})
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -174,20 +178,15 @@ export default function Admin() {
                       </div>
                       <div>
                         <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>TX Hash</div>
-                        
-                          href={`${EXPLORER[d.coin] ?? '#'}${d.tx_hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}
-                        >
-                          {d.tx_hash.slice(0, 16)}... <ExternalLink size={11} />
-                        </a>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--accent)' }}>
+                          {d.tx_hash.slice(0, 20)}
+                        </div>
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6 }}>
-                          USD amount to credit — verify on blockchain explorer first
+                          USD amount to credit
                         </div>
                         <input
                           type="number"
@@ -209,11 +208,6 @@ export default function Admin() {
               </div>
             </div>
           )}
-          {pending.length === 0 && (
-            <div className="card" style={{ textAlign: 'center', padding: '40px', marginBottom: 24 }}>
-              <div style={{ color: 'var(--muted)', fontSize: 13 }}>No pending deposits</div>
-            </div>
-          )}
           {resolved.length > 0 && (
             <div>
               <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, marginBottom: 14 }}>Resolved</h3>
@@ -226,7 +220,7 @@ export default function Admin() {
                     <span>{d.profiles?.full_name}</span>
                     <span style={{ fontFamily: 'var(--font-mono)' }}>{d.amount}</span>
                     <span style={{ fontFamily: 'var(--font-mono)' }}>{d.coin}</span>
-                    <span className={`badge badge-${d.status}`}>{d.status}</span>
+                    <span className={'badge badge-' + d.status}>{d.status}</span>
                     <span style={{ fontSize: 12, color: 'var(--muted)' }}>{new Date(d.created_at).toLocaleDateString()}</span>
                   </div>
                 ))}
@@ -261,8 +255,8 @@ export default function Admin() {
                     onClick={() => setAdjustMode(a => ({ ...a, [u.id]: mode }))}
                     style={{
                       padding: '6px 14px', borderRadius: 'var(--radius)', fontSize: 12,
-                      border: `1px solid ${adjustMode[u.id] === mode ? color : 'var(--border2)'}`,
-                      background: adjustMode[u.id] === mode ? `${color}15` : 'transparent',
+                      border: '1px solid ' + (adjustMode[u.id] === mode ? color : 'var(--border2)'),
+                      background: adjustMode[u.id] === mode ? color + '22' : 'transparent',
                       color: adjustMode[u.id] === mode ? color : 'var(--muted)',
                       cursor: 'pointer', transition: 'all 0.15s', fontWeight: adjustMode[u.id] === mode ? 500 : 400,
                     }}
@@ -275,10 +269,10 @@ export default function Admin() {
                   <input
                     type="number"
                     placeholder={
-                      adjustMode[u.id] === 'add' ? 'Amount to add...' :
-                      adjustMode[u.id] === 'subtract' ? 'Amount to deduct...' :
-                      adjustMode[u.id] === 'set' ? 'New balance amount...' :
-                      'Select a mode above first...'
+                      adjustMode[u.id] === 'add' ? 'Amount to add' :
+                      adjustMode[u.id] === 'subtract' ? 'Amount to deduct' :
+                      adjustMode[u.id] === 'set' ? 'New balance amount' :
+                      'Select a mode above first'
                     }
                     value={adjustments[u.id] || ''}
                     onChange={e => setAdjustments(a => ({ ...a, [u.id]: e.target.value }))}
@@ -299,10 +293,10 @@ export default function Admin() {
                     display: 'flex', alignItems: 'center', gap: 6,
                   }}
                 >
-                  {processing === u.id ? 'Updating...' :
-                    adjustMode[u.id] === 'add' ? <><Plus size={14} /> Add</> :
-                    adjustMode[u.id] === 'subtract' ? <><Minus size={14} /> Deduct</> :
-                    adjustMode[u.id] === 'set' ? <><DollarSign size={14} /> Set</> :
+                  {processing === u.id ? 'Saving...' :
+                    adjustMode[u.id] === 'add' ? 'Add' :
+                    adjustMode[u.id] === 'subtract' ? 'Deduct' :
+                    adjustMode[u.id] === 'set' ? 'Set' :
                     'Apply'}
                 </button>
               </div>
@@ -311,7 +305,7 @@ export default function Admin() {
                   marginTop: 10, padding: '8px 12px', borderRadius: 'var(--radius)', fontSize: 13,
                   background: adjustMsg[u.id].type === 'success' ? 'rgba(0,200,150,0.1)' : 'rgba(255,71,87,0.1)',
                   color: adjustMsg[u.id].type === 'success' ? 'var(--up)' : 'var(--down)',
-                  border: `1px solid ${adjustMsg[u.id].type === 'success' ? 'rgba(0,200,150,0.2)' : 'rgba(255,71,87,0.2)'}`,
+                  border: '1px solid ' + (adjustMsg[u.id].type === 'success' ? 'rgba(0,200,150,0.2)' : 'rgba(255,71,87,0.2)'),
                 }}>
                   {adjustMsg[u.id].text}
                 </div>
