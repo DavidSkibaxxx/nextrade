@@ -26,7 +26,7 @@ const WALLETS = [
   {
     coin: 'USDT',
     name: 'Tether (USDT TRC-20)',
-    address: '0x88611247DFfA549B3200924a0C8e906c9a73eFe2',
+    address: 'TXLRqtvGSBfMUue5vzaYjDoLhgGp6GRA6U',
     note: 'Send USDT on Tron network (TRC-20) only.',
     color: '#26A17B',
     minDeposit: 10,
